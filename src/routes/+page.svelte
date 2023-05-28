@@ -1,81 +1,113 @@
-
-
-<section class="section-padding">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-8 col-12">
-				<h3 class="mb-4 pb-2">Pay for the installation</h3>
-			</div>
-
-			<div class="col-lg-6 col-12">
-				<form action="/payment" method="post" class="custom-form contact-form">
-					<div class="row">
-						<div class="col-lg-12 col-12">
-							<div class="form-floating">
-								<input
-									type="text"
-									name="name"
-									id="name"
-									class="form-control"
-									placeholder="Name"
-									required=""
-								/>
-
-								<label for="floatingInput">Name</label>
-							</div>
-						</div>
-
-						<div class="col-lg-12 col-12">
-							<div class="form-floating">
-								<select class="form-select" aria-label="Default select example">
-                                    <option selected>Classification</option>
-                                    <option value="1">Test</option>
-                                  </select> 
-							</div>
-
-							<div class="form-floating">
-								<input
-									type="number"
-									name="amount"
-									id="amount"
-									class="form-control"
-									placeholder="Amount"
-									required=""
-								/>
-
-								<label for="floatingTextarea">Amount</label>
-							</div>
-						</div>
-
-						<div class="col-lg-4 col-12 ms-auto">
-							<button type="submit" class="form-control">Submit</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</section>
-
-<style>
-	section {
-		margin-top: 2em;
-		padding: 0%;
+<script>
+	import { onMount } from 'svelte';
+  
+	let name = '';
+	let phone = '';
+	let classification = '';
+	let price = '';
+  
+	const classifications = [
+	  { value: '', label: 'Select Classification' },
+	  { value: 'test_subject', label: 'Test Subject' },
+	  { value: 'rotaractor', label: 'Rotaractor' },
+	  { value: 'rotarian', label: 'Rotarian' },
+	];
+  
+	function handleSubmit() {
+	  // Perform API call and payment processing here
+	  // Display payment status message upon completion
+	  const paymentStatus = document.getElementById('paymentStatus');
+	  paymentStatus.innerText = 'Payment Complete!';
 	}
-	button {
-		background: #80d0c7;
-		border-color: #7fffd4;
-		border-radius: 100px;
-		color: var(--white-color);
-		font-family: 'Montserrat', sans-serif;
-		font-size: 20px;
-		font-weight: 600;
-		transition: all 0.3s;
-		margin-bottom: 0;
+  
+	// Update price based on the selected classification
+	function updatePrice() {
+	  switch (classification) {
+		case 'test_subject':
+		  price = 'KES 1';
+		  break;
+		case 'rotaractor':
+		  price = 'KES 1500';
+		  break;
+		case 'rotarian':
+		  price = 'KES 2000';
+		  break;
+		default:
+		  price = '';
+		  break;
+	  }
 	}
-
-	.contact-form .form-floating > textarea {
-		border-radius: var(--border-radius-medium);
-		height: 150px;
+  
+	onMount(updatePrice);
+  </script>
+  
+  <main>
+	<form on:submit={handleSubmit}>
+	  <label for="name">Name</label>
+	  <input type="text" id="name" bind:value={name} required>
+  
+	  <label for="phone">Phone Number</label>
+	  <input type="tel" id="phone" bind:value={phone} required>
+  
+	  <label for="classification">Classification</label>
+	  <select id="classification" bind:value={classification} required>
+		{#each classifications as { value, label }}
+		  <option value={value}>{label}</option>
+		{/each}
+	  </select>
+  
+	  <label for="price">Price</label>
+	  <input type="text" id="price" bind:value={price} readonly>
+  
+	  <button type="submit">Submit</button>
+	</form>
+	<div id="paymentStatus"></div>
+  </main>
+  
+  <style>
+	main {
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  margin-top: 20px;
 	}
-</style>
+  
+	form {
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  width: 300px;
+	  padding: 20px;
+	  background-color: #fff;
+	  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+  
+	form label {
+	  font-weight: bold;
+	  margin-bottom: 5px;
+	}
+  
+	form input,
+	form select {
+	  width: 100%;
+	  padding: 10px;
+	  margin-bottom: 10px;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	}
+  
+	form button {
+	  padding: 10px 20px;
+	  background-color: #4caf50;
+	  color: white;
+	  border: none;
+	  border-radius: 4px;
+	  cursor: pointer;
+	}
+  
+	#paymentStatus {
+	  margin-top: 20px;
+	  text-align: center;
+	}
+  </style>
+  
